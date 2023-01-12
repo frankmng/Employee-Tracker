@@ -1,16 +1,16 @@
-const mysql = require('mysql2')
+const mysql = require('mysql2/promise')
 const fs = require("fs")
 
 // load .env variables
 require('dotenv').config();
 
 // read sql seed query
-const seedQuery = fs.readFileSync('./db/seeds.sql', {
-  encoding: "utf-8",
-})
+// const seedQuery = fs.readFileSync('./db/seeds.sql', {
+//   encoding: "utf-8",
+// })
 
 // connect to database
-const db = mysql.createConnection(
+const connection = await mysql.createConnection(
   {
     user: process.env.DB_USER,
     database: process.env.DB_DB,
@@ -20,15 +20,16 @@ const db = mysql.createConnection(
     console.log(`Connected to the employee_db database.`)
 );
 
-db.connect();
-console.log("Running SQL seed...")
 
-db.query(seedQuery, err => {
-  if(err) {
-    throw err
-  }
-  console.log("SQL seed completed")
-  db.end();
-})
+// db.connect();
+// console.log("Running SQL seed...")
 
-module.exports = db;
+// db.query(seedQuery, err => {
+//   if(err) {
+//     throw err
+//   }
+//   console.log("SQL seed completed")
+//   db.end();
+// })
+
+module.exports = connection;
