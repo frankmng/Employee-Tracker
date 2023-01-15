@@ -5,12 +5,12 @@ const fs = require("fs")
 require('dotenv').config();
 
 // read sql seed query
-// const seedQuery = fs.readFileSync('./db/seeds.sql', {
-//   encoding: "utf-8",
-// })
+const seedQuery = fs.readFileSync('./db/seeds.sql', {
+  encoding: "utf-8",
+})
 
 // connect to database
-const connection = await mysql.createConnection(
+const db = mysql.createConnection(
   {
     user: process.env.DB_USER,
     database: process.env.DB_DB,
@@ -21,15 +21,15 @@ const connection = await mysql.createConnection(
 );
 
 
-// db.connect();
-// console.log("Running SQL seed...")
+db.connect();
+console.log("Running SQL seed...")
 
-// db.query(seedQuery, err => {
-//   if(err) {
-//     throw err
-//   }
-//   console.log("SQL seed completed")
-//   db.end();
-// })
+db.query(seedQuery, err => {
+  if(err) {
+    throw err
+  }
+  console.log("SQL seed completed")
+  db.end();
+})
 
 module.exports = connection;
