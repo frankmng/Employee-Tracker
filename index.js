@@ -30,6 +30,7 @@ async function promptUser() {
 				'View All Departments',
 				'Add Department',
 				'View Total Budget by Department',
+				'View employees by manager',
 				'Quit'
 					]
 			  }
@@ -104,6 +105,7 @@ async function promptUser() {
 						]
 					  }
 					])
+
 					let empData = await employeeData;
 					const {firstName, lastName, role, manager}  = empData
 					const roleID = await connection.execute(`SELECT id from roles where title like '${role}'`) 
@@ -116,6 +118,7 @@ async function promptUser() {
 					await connection.execute(addEmployee);
 					console.log("Employee has been added to the database");
 			}
+			// Update employee role
 			if (answers.option === 'Update Employee Role') {
 				let updateEmployeeData = await inquirer.prompt([
 					{
@@ -165,7 +168,7 @@ async function promptUser() {
 				await connection.execute(updateEmployee);
 				console.log("Updated employee's role");
 			}
-
+			// Add department
 			if (answers.option === 'Add Department') {
 				let departmentData = await inquirer.prompt([
 					{
@@ -179,7 +182,7 @@ async function promptUser() {
 				await connection.execute(addDepartment);
 				console.log(`Added ${department} to the database`);
 			}
-
+			// Add role
 			if (answers.option === 'Add Role') {
 				let roleData = await inquirer.prompt([
 					{
@@ -213,6 +216,8 @@ async function promptUser() {
 				await connection.execute(addRole);
 				console.log(`Added ${role} to the database`);
 			}
+
+			// Bonus - View Total Budget by Department
 			if (answers.option === 'View Total Budget by Department') {
 				let totalBudget = await inquirer.prompt([
 					{
@@ -233,6 +238,27 @@ async function promptUser() {
 				const department_budget = departmentBudget[0][0].budget;
 
 				console.log(`The total budget utilized for the ${department} department is $${department_budget}`)
+			}
+
+			// Bonus - View all employees by anager
+			if (answers.option === 'View employees by manager') {
+				let employees_manager = await inquirer.prompt([
+					{
+						type: 'list',
+						name: 'manager',
+						message: "Which manager do you want to view the employees for?",
+						choices: 
+						[
+							'John Smith', 
+							'Jenny Rothlin',
+							'Ken Shelby',
+							'Natasha Vogel',
+						]
+					}
+				])
+				const {manager} = employees_manager
+				const [rows] = await connection.execute(`with employeeData as (SELECT e.id as ID, e.first_name as FirstName, e.last_name as LastName, r.title as Title, d.department_name as Department, r.salary as Salary, e.manager_id from employee e join roles r on e.role_id = r.id join department d on r.department_id = d.id) SELECT ed.ID, ed.FirstName, ed.LastName, ed.Title, ed.Department, ed.Salary, CONCAT(e.first_name, " ", e.last_name) as Manager from employeeData ed left join employee e on ed.manager_id = e.id where CONCAT(e.first_name, " ", e.last_name) = '${manager}'`);
+				console.table(rows);
 			}
 		connection.end();
 	}
