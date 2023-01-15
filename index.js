@@ -118,6 +118,58 @@ async function promptUser() {
 					await connection.execute(addEmployee);
 					console.log("Employee has been added to the database");
 			}
+			if (answers.option === 'Update Employee Role') {
+				let updateEmployeeData = await inquirer.prompt([
+					{
+						type: 'list',
+						name: 'name',
+						message: "Which employee's role do you want to update?",
+						choices: 
+						[
+							'John Smith', 
+							'Ben Thomas',
+							'Jenny Rothlin',
+							'Mark Anthony',
+							'Ken Shelby',
+							'Sam Williams',
+							'Natasha Vogel',
+							'Robert Barnes' 
+						]
+					  },
+					  {
+						type: 'list',
+						name: 'role',
+						message: "Which role do you want to assign to the selected employee?",
+						choices: 
+						[
+							'Sales lead', 
+							'Salesperson', 
+							'Lead Engineer',
+							'Software Engineer',
+							'Account Manager',
+							'Accountant',
+							'Legal Team Lead',
+							'Lawyer',
+							'Customer Service' 
+						]
+					  }
+				])
+				let empData = await updateEmployeeData;
+				const {name, role}  = empData
+				
+				const empID = await connection.execute(`SELECT id from employee where CONCAT(first_name,' ',last_name) = '${name}'`) 
+				const roleID = await connection.execute(`SELECT id from roles where title like '${role}'`) 
+
+				const emp_id = empID[0][0].id;
+				const role_id = roleID[0][0].id;
+
+				const updateEmployee = `UPDATE employee SET role_id = '${role_id}' WHERE id = ${emp_id};`;
+				await connection.execute(updateEmployee);
+				console.log("Updated employee's role");
+				
+
+
+			}
 		connection.end();
 	}
 }
