@@ -26,7 +26,7 @@ The main features of the application are:
 - Run the project by using node index.js in your terminal
 
 ## Usage
-Answer the following prompts in your terminal and select 'Quit' to exit.
+Choose from any of the following menu options from your terminal and then select 'Quit' to exit when finished.
 ## Credits
 N/A
 
