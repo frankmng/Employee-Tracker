@@ -2,6 +2,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 # Employee-Tracker
 ## Description
+![employee-tracker](https://raw.githubusercontent.com/frankmng/Employee-Tracker/main/assets/images/employee-tracker.png)
+
 
 This command-line application is designed to manage a company's employee database by providing an easy-to-use interface for non-developers. It is built from scratch using Node.js, Inquirer, and MySQL. The application is a content management system (CMS) that allows users to view and interact with the information stored in the database.
 
